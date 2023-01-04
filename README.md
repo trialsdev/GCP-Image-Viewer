@@ -36,7 +36,12 @@ variable "user" {
 
 ## Create DICOM-store ##
 
-Follow the instructions below to create the DICOM store. 
+Follow the instructions below to create the DICOM store.
+
+Clone the repository
+```
+
+```
 
 ## Importing data from the storage bucket to DICOM-store
 
