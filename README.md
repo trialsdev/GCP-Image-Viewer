@@ -94,8 +94,8 @@ We will be using the OHIF viewer to view the images from the DICOM store. The OH
 
 #### Opening the OHIF Viewer Using Docker ####
 
-Run the following docker command to open your DICOM-store in OHIF viewer.
+Run the following docker command to open your DICOM-store in OHIF viewer. Replace YOUR_CLIENT_ID with the client ID created in the step above.
 
 ```
-docker run --env CLIENT_ID={$someID}.apps.googleusercontent.com --publish 3000:80 ohif/viewer-google-cloud
+docker run --env CLIENT_ID={YOUR_CLIENT_ID}.apps.googleusercontent.com --publish 3000:80 ohif/viewer-google-cloud
 ```
