@@ -40,14 +40,32 @@ Follow the instructions below to create the DICOM store.
 
 Clone the repository
 ```
-
+https://github.com/trialsdev/GCP-Image-Viewer.git
+```
+Go to the terraform folder
+```
+cd terraform
+```
+View the infrastructure plan
+```
+terraform plan
+```
+Create the infrastructure in GCP
+```
+terraform apply
 ```
 
 ## Importing data from the storage bucket to DICOM-store
 
-Multiple files
+In order to import the data from the storage bucket to the DICOM-store we can use the following code. You can find other ways to do this <a href = "https://cloud.google.com/healthcare-api/docs/how-tos/dicom-import-export#gcloud>here</a>
+
 ```
 gcloud healthcare dicom-stores import gcs my-dicom-store --dataset=example-dataset --location=us-east1 --gcs-uri=gs://image_archive_bucket/dicomfiles/**.dcm
 ```
 
+## Deleting the infrastructure
+
+```
+terraform destroy
+```
 
