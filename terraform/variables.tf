@@ -8,21 +8,15 @@ variable "user" {
 
 locals {
 
-    project_name = "dicomimageviewer${random_id.id.hex}" #enter your project name
+    project_name = "dicom-store-${random_id.id.hex}" #enter your project name
     project = "${local.project_name}"
     region = "us-east1"
 
     #storage bucket info
-    image_archive_bucket = "div_image_archive_bucket" #enter your image archive storage bucket name
+    image_archive_bucket = "image_archive_bucket" #enter your image archive storage bucket name
 
-    #container image name
-    container_image_name = "div_image" #enter your container image name
-    image_name = "gcr.io/${local.project}/${local.container_image_name}"
-    image_tag = "latest"
-    image_uri = "${local.image_name}:${local.image_tag}"
-
-    #service name
-    cloudrun_service_name = "div-cloudrun"
+    #dicom store name
+    dicom_store_name = "my-dicom-store"
 
 }
 

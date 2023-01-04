@@ -12,6 +12,7 @@ data "google_billing_account" "account" {
 
 }
 
+
 resource "google_project" "project" {
 
     name = local.project_name
@@ -32,6 +33,22 @@ resource "google_project_iam_member" "project_owner" {
 
 }
 
+resource "google_project_service" "resourcemanager" {
+
+    project = local.project
+    service = "cloudresourcemanager.googleapis.com"
+
+    disable_dependent_services = true
+}
+
+resource "google_project_service" "healthcare" {
+    
+    project = local.project
+    service = "healthcare.googleapis.com"
+
+    disable_dependent_services = true
+}
+
 resource "google_storage_bucket" "image_archive_bucket" {
 
     name = local.image_archive_bucket
@@ -41,99 +58,65 @@ resource "google_storage_bucket" "image_archive_bucket" {
     depends_on = [
         google_project_iam_member.project_owner
     ]
-
 }
 
-resource "google_project_service" "cloud_registry_service" {
-
-  service = "containerregistry.googleapis.com"
-  disable_dependent_services = true
-
-  depends_on = [
-    google_project.project,
-  ]
-
-}
-
-resource "google_project_service" "cloud_build_service" {
-
-  service = "cloudbuild.googleapis.com"
-  disable_dependent_services = true
-
-  depends_on = [
-    google_project.project,
-    google_project_iam_member.project_owner
-  ]
-
-}
-
-resource "google_project_service" "cloud_run_service" {
-
-  service = "run.googleapis.com"
-  disable_dependent_services = true
-
-  depends_on = [
-    google_project.project,
-  ]
-
-}
-
-#create cloud run service using the image
-resource "google_cloud_run_service" "default" {
-  
-  project = local.project_name
-  name     = local.cloudrun_service_name #name the cloud run service
-  location = local.region
-
-  template {
-    spec {
-      containers {
-        image = local.image_uri # Replace with newly created image gcr.io/<project_id>/pubsub
-
-      }
-    }
-  }
-  traffic {
-    percent         = 100
-    latest_revision = true
-  }
-  depends_on = [
-    google_project.project,
-    google_project_service.cloud_run_service,
-    null_resource.app_container, 
-  ]
-}
-
-#create an the image from app directory.
-resource "null_resource" "app_container" {
-
+#this is a null resource created to upload local dicom files to the storage bucket. 
+resource "null_resource" "upload_files" {
+    
     provisioner "local-exec" {
-        command = "cd ../app && gcloud config set project ${local.project} && gcloud builds submit --tag ${local.image_uri}"
+        command = "gcloud config set project ${local.project} && gcloud storage cp -r ../data/dicomfiles/ gs://${local.image_archive_bucket}/dicomfiles"
     }
+    
+    depends_on = [
+        google_storage_bucket.image_archive_bucket,
+    ]
+}
+
+
+resource "google_healthcare_dicom_store" "default" {
+  
+    name    = local.dicom_store_name
+    dataset = google_healthcare_dataset.dataset.id
 
     depends_on = [
+        google_project_iam_member.project_owner,
+        google_project_service.healthcare
+    ]
+
+}
+
+resource "google_healthcare_dataset" "dataset" {
+
+    name     = "example-dataset"
+    location = local.region
+
+    depends_on = [
+        google_project_iam_member.project_owner,
+        google_project_service.healthcare
+    ]
+
+}
+
+data "google_storage_project_service_account" "gcs_account"{
+    depends_on = [
         google_project.project,
-        google_project_service.cloud_build_service,
-        google_project_iam_member.project_owner
     ]
 }
 
 
-#allowing authentication
+resource "google_storage_bucket_iam_binding" "binding" {
+    bucket = google_storage_bucket.image_archive_bucket.name
+    role = "roles/storage.admin"
 
-data "google_iam_policy" "noauth" {
-  binding {
-    role = "roles/run.invoker"
     members = [
-      "allUsers",
+        "serviceAccount:${data.google_storage_project_service_account.gcs_account.email_address}",
+        "serviceAccount:service-${google_project.project.number}@gcp-sa-healthcare.iam.gserviceaccount.com", 
     ]
-  }
+    
+    depends_on = [
+        google_project.project,
+        google_project_service.healthcare
+    ]
 }
 
-resource "google_cloud_run_service_iam_policy" "noauth" {
-  location    = google_cloud_run_service.default.location
-  project     = google_cloud_run_service.default.project
-  service     = google_cloud_run_service.default.name
 
-  policy_data = data.google_iam_policy.noauth.policy_data
-}
