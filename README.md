@@ -61,7 +61,7 @@ terraform apply
 
 ## Importing data from the storage bucket to DICOM-store
 
-In order to import the data from the storage bucket to the DICOM-store we can use the following code. You can find other ways to do this <a href = "https://cloud.google.com/healthcare-api/docs/how-tos/dicom-import-export#gcloud">here</a>
+In order to import the data from the storage bucket to the DICOM-store we can use the following code. You can find other ways to do this <a href = "https://cloud.google.com/healthcare-api/docs/how-tos/dicom-import-export#gcloud">here</a>.
 
 ```
 gcloud healthcare dicom-stores import gcs my-dicom-store --dataset=example-dataset --location=us-east1 --gcs-uri=gs://image_archive_bucket/dicomfiles/**.dcm
@@ -73,3 +73,6 @@ gcloud healthcare dicom-stores import gcs my-dicom-store --dataset=example-datas
 terraform destroy
 ```
 
+## Setting up the OHIF Viewer
+
+We will be using the OHIF viewer to view the images from the DICOM store. The OHIF viewer will be setup locally by using the docker image. A detailed explanation can be found <a href = "https://docs.ohif.org/history/v1/connecting-to-image-archives/google-cloud-healthcare.html">here</a>.
