@@ -61,7 +61,7 @@ terraform apply
 
 ## Importing data from the storage bucket to DICOM-store
 
-In order to import the data from the storage bucket to the DICOM-store we can use the following code. You can find other ways to do this <a href = "https://cloud.google.com/healthcare-api/docs/how-tos/dicom-import-export#gcloud>here</a>
+In order to import the data from the storage bucket to the DICOM-store we can use the following code. You can find other ways to do this <a href = "https://cloud.google.com/healthcare-api/docs/how-tos/dicom-import-export#gcloud">here</a>
 
 ```
 gcloud healthcare dicom-stores import gcs my-dicom-store --dataset=example-dataset --location=us-east1 --gcs-uri=gs://image_archive_bucket/dicomfiles/**.dcm
