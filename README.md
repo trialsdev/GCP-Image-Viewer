@@ -81,3 +81,21 @@ We will be using the OHIF viewer to view the images from the DICOM store. The OH
 
 - Go to APIs & Services > Credentials to create an OAuth Consent screen and fill in your application details.
     - Under Scopes for Google APIs, click "manually paste scopes".
+    - Add the following scopes
+        - https://www.googleapis.com/auth/cloudplatformprojects.readonly
+        - https://www.googleapis.com/auth/cloud-healthcare
+
+- Go to APIs & Services > Credentials to create a new set of credentials
+    - Choose the "Web Application" type
+    - Set up an OAuth 2.0 Client ID
+    - Add your domain ```http://localhost:3000``` to Authorized JavaScript origins.
+    - Add ```http://localhost:3000``` and ```http://localhost:3000/_oauth/google``` to Authorized Redirect URIs.
+    - Save your Client ID for later
+
+#### Opening the OHIF Viewer Using Docker ####
+
+Run the following docker command to open your DICOM-store in OHIF viewer.
+
+```
+docker run --env CLIENT_ID={$someID}.apps.googleusercontent.com --publish 3000:80 ohif/viewer-google-cloud
+```
