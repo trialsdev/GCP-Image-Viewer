@@ -75,4 +75,9 @@ terraform destroy
 
 ## Setting up the OHIF Viewer
 
-We will be using the OHIF viewer to view the images from the DICOM store. The OHIF viewer will be setup locally by using the docker image. A detailed explanation can be found <a href = "https://docs.ohif.org/history/v1/connecting-to-image-archives/google-cloud-healthcare.html">here</a>.
+We will be using the OHIF viewer to view the images from the DICOM store. The OHIF viewer will be setup locally by using the docker image. A detailed explanation can be found <a href = "https://docs.ohif.org/history/v1/connecting-to-image-archives/google-cloud-healthcare.html">here</a> in their website. (Follow instructions 6 through 8 in the Setup a Google Cloud Healthcare Project)
+
+#### OAuth Consent Screen ####
+
+- Go to APIs & Services > Credentials to create an OAuth Consent screen and fill in your application details.
+    - Under Scopes for Google APIs, click "manually paste scopes".
