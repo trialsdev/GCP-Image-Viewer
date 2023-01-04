@@ -15,7 +15,24 @@ This epository contains code to setup a DICOM store in Google Cloud Platform (GC
 
 In order to run the code you need a billing enabled Google Cloud Platform Account. You will also need the GCP command line interface (CLI), terraform and docker installed and properly configured in your local machine. The following links are resources on how to setup the required software. 
 
+1. <a href = "#">Google Cloud Platform</a>
+2. <a href = "https://cloud.google.com/sdk/docs/install">Google Cloud CLI </a>
+3. <a href = "https://developer.hashicorp.com/terraform/tutorials/aws-get-started/install-cli"> Terraform </a>
+4. <a href = "https://docs.docker.com/get-docker/"> Docker </a>
 
+## Add credentials ##
+
+Before running the code, first you need to edit the var.tf file with your credentials. You can locate this file in the terraform folder and edit the billing account name and the user email address.
+
+```
+variable "billing_account_name" {
+    default = "your billing account name"
+}
+
+variable "user" {
+    default = "your GCP email address"
+}
+```
 
 ## Importing data from the storage bucket to DICOM-store
 
