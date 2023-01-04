@@ -46,6 +46,10 @@ Go to the terraform folder
 ```
 cd terraform
 ```
+Initialize terraform
+```
+terraform init
+```
 View the infrastructure plan
 ```
 terraform plan
